@@ -89,14 +89,14 @@ body {
 /* Game Board */
 .board-container {
     padding: 50px; /* This creates the space for the visual border */
-    background-color: #1a1a1a;
-    border: none;
-    box-shadow: 0 0 25px rgba(0, 255, 255, 0.3), inset 0 0 15px rgba(0, 255, 255, 0.2);
+    background-color: transparent;
+    border: 1px solid rgba(0, 255, 255, 0.5);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.3), inset 0 0 15px rgba(0, 255, 255, 0.3);
     border-radius: 10px;
-    /* Neon grid pattern for the border */
+    /* Neon grid pattern for the border to look like wall tiles */
     background-image:
-        linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+        linear-gradient(rgba(0, 255, 255, 0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.3) 1px, transparent 1px);
     background-size: 50px 50px;
     display: flex;
     justify-content: center;
