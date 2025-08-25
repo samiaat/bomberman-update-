@@ -140,17 +140,16 @@ body {
     left: 5px; /* Offset to center in cell */
     width: 40px;
     height: 40px;
-    border-radius: 50%;
     background-size: contain;
     z-index: 5;
     /* The transform for smooth movement is applied inline */
-    box-shadow: 0 0 15px, inset 0 0 5px; /* Glowing effect */
 }
 
-.player-1 { background-color: #00ff00; color: #00ff00; } /* Neon Green */
-.player-2 { background-color: #ff00ff; color: #ff00ff; } /* Neon Magenta */
-.player-3 { background-color: #ffff00; color: #ffff00; } /* Neon Yellow */
-.player-4 { background-color: #ff4500; color: #ff4500; } /* Neon OrangeRed */
+/* Base filter makes the black ghost icon white. Then add player-specific glow. */
+.player-1 { filter: brightness(0) invert(1) drop-shadow(0 0 8px #00ff00); }
+.player-2 { filter: brightness(0) invert(1) drop-shadow(0 0 8px #ff00ff); }
+.player-3 { filter: brightness(0) invert(1) drop-shadow(0 0 8px #ffff00); }
+.player-4 { filter: brightness(0) invert(1) drop-shadow(0 0 8px #ff4500); }
 
 /* Bomb */
 .bomb {
