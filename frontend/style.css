@@ -23,6 +23,19 @@ body {
     align-items: center;
 }
 
+.app-container {
+    user-select: none; /* Prevent text selection on the whole app */
+}
+
+.app-container:focus {
+    outline: none;
+}
+
+/* Apply focus style to the board, not the whole container */
+.app-container:focus-visible .board {
+    box-shadow: 0 0 25px #00ffff;
+}
+
 /* General App Container */
 .container {
     background-color: #444;
@@ -87,30 +100,17 @@ body {
 }
 
 /* Game Board */
-.board-container {
-    padding: 50px; /* This creates the space for the visual border */
-    background-color: transparent;
-    border: 1px solid rgba(0, 255, 255, 0.5);
-    box-shadow: 0 0 25px rgba(0, 255, 255, 0.3), inset 0 0 15px rgba(0, 255, 255, 0.3);
-    border-radius: 10px;
-    /* Neon grid pattern for the border to look like wall tiles */
-    background-image:
-        linear-gradient(rgba(0, 255, 255, 0.3) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 255, 255, 0.3) 1px, transparent 1px);
-    background-size: 50px 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .board {
     display: grid;
     position: relative;
-    border: none;
     background-color: transparent;
     /* Neon grid for the play area */
     background-image: radial-gradient(circle, rgba(0, 255, 255, 0.15) 1px, transparent 1px);
     background-size: 50px 50px;
+    /* Bold, glowing border */
+    border: 5px solid rgba(0, 255, 255, 0.7);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    border-radius: 5px;
 }
 
 .cell {
