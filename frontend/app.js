@@ -179,9 +179,14 @@ const boardManager = {
         this.activeElements.clear();
 
         this.updatePool({
-            pool: this.playerPool, items: gameState.players, key: p => p.id, className: 'player',
+            pool: this.playerPool,
+            items: gameState.players,
+            key: p => p.id,
+            className: 'player',
+            tag: 'img', // Create an <img> element for players
             updateFunc: (el, p) => {
                 el.className = `player player-${p.id} ${p.isAlive ? '' : 'dead'}`;
+                el.src = '/assets/ghost.png'; // Use local ghost image
                 el.style.transform = `translate(${p.x}px, ${p.y}px)`;
             }
         });
