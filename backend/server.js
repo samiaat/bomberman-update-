@@ -1,6 +1,5 @@
 const WebSocket = require('ws');
-const gameActions = require('./game.js');
-const { updateAI } = require('./ai.js');
+const { createInitialGameState, handlePlayerStartMoving, handlePlayerStopMoving, updatePlayerPosition, handlePlaceBomb, handleExplosions } = require('./game.js');
 
 const wss = new WebSocket.Server({ port: 8080 });
 console.log('Server started on port 8080');
@@ -52,23 +51,10 @@ function broadcastLobbyState() {
   });
 }
 
-function addAIPlayer() {
-    if (lobbyState.players.length < 4) {
-        const aiPlayer = {
-            id: nextPlayerId++,
-            isAI: true,
-            nickname: `AI-${nextPlayerId}`,
-            isAlive: true,
-        };
-        lobbyState.players.push(aiPlayer);
-        console.log(`Added ${aiPlayer.nickname}`);
-    }
-}
-
 function startGame() {
   console.log('Game starting!');
   lobbyState.status = 'inprogress';
-  mainGameState = gameActions.createInitialGameState(lobbyState.players);
+  mainGameState = createInitialGameState(lobbyState.players);
   gameLoopInterval = setInterval(gameTick, GAME_TICK_RATE);
   broadcast({ type: 'START_GAME', payload: mainGameState });
 }
@@ -76,23 +62,16 @@ function startGame() {
 function gameTick() {
     if (!mainGameState) return;
 
-    // 1. Update AI decisions
+    // 1. Update all player positions based on their current movement state
     mainGameState.players.forEach(player => {
-        if (player.isAI) {
-            updateAI(player, mainGameState, gameActions);
-        }
-    });
-
-    // 2. Update all player positions based on their current movement state
-    mainGameState.players.forEach(player => {
-        gameActions.updatePlayerPosition(player, mainGameState);
+        updatePlayerPosition(player, mainGameState);
     });
 
     // 2. Decrement bomb timers
     mainGameState.bombs.forEach(bomb => bomb.timer -= GAME_TICK_RATE / 1000);
 
     // 3. Handle explosions
-    gameActions.handleExplosions(mainGameState);
+    handleExplosions(mainGameState);
 
     // 4. Decrement explosion effect timers and filter them out
     const initialExplosionCount = mainGameState.explosions.length;
@@ -126,34 +105,24 @@ function gameTick() {
 }
 
 function startGameCountdown() {
-    if (lobbyState.status === 'countdown') return;
-    clearTimeout(lobbyState.lobbyTimer);
-    lobbyState.lobbyTimer = null;
-
-    // Add AI players if needed
-    const humanPlayers = lobbyState.players.filter(p => !p.isAI).length;
-    if (humanPlayers > 0) {
-        while (lobbyState.players.length < 2) {
-            addAIPlayer();
-        }
-    }
-
-
-    lobbyState.status = 'countdown';
-    let remaining = COUNTDOWN_TIME;
-    lobbyState.countdownTimer = {
-        interval: setInterval(() => {
-            remaining--;
-            broadcast({ type: 'UPDATE_COUNTDOWN', payload: remaining });
-            if (remaining <= 0) {
-                clearInterval(lobbyState.countdownTimer.interval);
-                startGame();
-            }
-        }, 1000),
-        remaining: remaining
-    };
-    broadcastLobbyState();
-    console.log('Starting 10-second countdown...');
+  if (lobbyState.status === 'countdown') return;
+  clearTimeout(lobbyState.lobbyTimer);
+  lobbyState.lobbyTimer = null;
+  lobbyState.status = 'countdown';
+  let remaining = COUNTDOWN_TIME;
+  lobbyState.countdownTimer = {
+    interval: setInterval(() => {
+      remaining--;
+      broadcast({ type: 'UPDATE_COUNTDOWN', payload: remaining });
+      if (remaining <= 0) {
+        clearInterval(lobbyState.countdownTimer.interval);
+        startGame();
+      }
+    }, 1000),
+    remaining: remaining
+  };
+  broadcastLobbyState();
+  console.log('Starting 10-second countdown...');
 }
 
 // --- WebSocket Server Logic ---
@@ -203,57 +172,44 @@ wss.on('connection', (ws) => {
       case 'START_MOVING':
         if (mainGameState) {
             const gamePlayer = mainGameState.players.find(p => p.id === player.id);
-            if (gamePlayer) gameActions.handlePlayerStartMoving(gamePlayer, data.payload);
+            if (gamePlayer) handlePlayerStartMoving(gamePlayer, data.payload);
         }
         break;
       case 'STOP_MOVING':
         if (mainGameState) {
             const gamePlayer = mainGameState.players.find(p => p.id === player.id);
-            if (gamePlayer) gameActions.handlePlayerStopMoving(gamePlayer, data.payload);
+            if (gamePlayer) handlePlayerStopMoving(gamePlayer, data.payload);
         }
         break;
       case 'PLACE_BOMB':
         if (mainGameState) {
             const gamePlayer = mainGameState.players.find(p => p.id === player.id);
-            if (gamePlayer) gameActions.handlePlaceBomb(gamePlayer, mainGameState);
+            if (gamePlayer) handlePlaceBomb(gamePlayer, mainGameState);
         }
         break;
     }
   });
 
   ws.on('close', () => {
-    const playerIndex = lobbyState.players.findIndex(p => p.ws === ws);
-    if (playerIndex !== -1) {
-        const player = lobbyState.players[playerIndex];
+    const player = lobbyState.players.find(p => p.ws === ws);
+    if (player) {
         console.log(`Player ${player.nickname} disconnected`);
-        lobbyState.players.splice(playerIndex, 1);
-
-        if (mainGameState) {
-            const gamePlayer = mainGameState.players.find(p => p.id === player.id);
-            if (gamePlayer) gamePlayer.isAlive = false; // Mark as dead in the game
-
-            const humanPlayersLeft = mainGameState.players.some(p => !p.isAI && p.isAlive);
-            if (!humanPlayersLeft) {
-                // End game if no human players are left
-                clearInterval(gameLoopInterval);
-                broadcast({ type: 'GAME_OVER', payload: { winner: null } }); // Or determine AI winner
-                mainGameState = null;
-                resetLobby();
-            }
-        } else {
-            // If game has not started, just update lobby
-            if (lobbyState.players.length < 2 && lobbyState.lobbyTimer) {
+        lobbyState.players = lobbyState.players.filter(p => p.id !== player.id);
+        if (lobbyState.status !== 'inprogress') {
+            if (lobbyState.players.length < 2) {
                 clearTimeout(lobbyState.lobbyTimer);
                 lobbyState.lobbyTimer = null;
             }
             if (lobbyState.status === 'countdown') {
                 clearInterval(lobbyState.countdownTimer.interval);
-                lobbyState.status = 'waiting'; // Go back to waiting
+                lobbyState.status = 'waiting';
             }
             broadcastLobbyState();
+        } else {
+            mainGameState.players = mainGameState.players.filter(p => p.id !== player.id);
         }
     }
-});
+  });
 
   ws.on('error', (error) => console.error('WebSocket error:', error));
 });
