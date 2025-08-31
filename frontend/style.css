@@ -7,8 +7,8 @@ body, h1, h2, p, ul, li, button, input {
 }
 
 body {
-    background-color: #f4f4f4;
-    color: #333;
+    background-color: #1a1a1a;
+    color: #eee;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -38,28 +38,30 @@ body {
 
 /* General App Container */
 .container {
-    background-color: #fff;
+    background-color: #2a2a2a;
     padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     width: 100%;
     max-width: 500px;
     text-align: center;
+    border: 1px solid #444;
+    animation: fadeIn 0.5s ease-out;
 }
 
 /* Nickname Screen */
 .nickname-screen h1 {
     margin-bottom: 25px;
-    color: #333;
+    color: #eee;
     font-size: 2.5em;
 }
 
 .nickname-screen input {
     padding: 15px;
     border-radius: 8px;
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
-    color: #333;
+    border: 1px solid #444;
+    background-color: #1a1a1a;
+    color: #eee;
     width: 100%;
     margin-bottom: 20px;
     font-size: 16px;
@@ -87,6 +89,7 @@ body {
 
 .nickname-screen button:hover {
     background-color: #a35d6a;
+    transform: scale(1.05);
 }
 
 /* Lobby Screen */
@@ -99,33 +102,39 @@ body {
 
 .lobby-screen h1 {
     margin-bottom: 10px;
-    color: #333;
+    color: #eee;
 }
 
 .lobby-screen p {
     font-size: 16px;
     margin: 0;
-    color: #666;
+    color: #aaa;
 }
 
 .player-list {
     list-style: none;
     padding: 0;
     width: 100%;
-    background-color: #fff;
-    border: 1px solid #eee;
+    background-color: #1a1a1a;
+    border: 1px solid #444;
     border-radius: 8px;
     padding: 20px;
 }
 
 .player-list li {
     padding: 12px;
-    background-color: #f9f9f9;
+    background-color: #2a2a2a;
     border-radius: 4px;
     margin-bottom: 10px;
     font-weight: bold;
     color: #B76E79; /* Rose Gold */
     text-align: center;
+    transition: all 0.2s ease-in-out;
+}
+
+.player-list li:hover {
+    transform: scale(1.05);
+    background-color: #3a3a3a;
 }
 
 .player-list li:last-child {
@@ -281,6 +290,17 @@ body {
 }
 
 /* --- Animations --- */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
 @keyframes fire-explosion {
     0% {
