@@ -1,6 +1,5 @@
 import FacileJS from '../../framework/index.js';
 import { boardManager } from '../game/boardManager.js';
-import { ChatComponent } from './Chat.js';
 
 function BoardRendererComponent({ map }) {
     boardManager.reset();
@@ -30,7 +29,6 @@ export function GameScreen({ gameState, chatMessages, onSendMessage }) {
     }
     return FacileJS.createElement('div', { class: 'game-container' },
         PlayerStatus({ players }),
-        BoardRendererComponent({ map }),
-        ChatComponent({ messages: chatMessages, onSendMessage })
+        BoardRendererComponent({ map })
     );
 }
