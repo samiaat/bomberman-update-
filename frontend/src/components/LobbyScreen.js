@@ -8,7 +8,7 @@ export function LobbyScreen({ lobby, chatMessages, onSendMessage }) {
     return FacileJS.createElement('div', { class: 'container lobby-screen' },
         FacileJS.createElement('h1', {}, 'Lobby'),
         FacileJS.createElement('p', {}, `Players: ${players.length}/4`),
-        FacileJS.createElement('ul', {},
+        FacileJS.createElement('ul', { class: 'player-list' },
             ...players.map(p => FacileJS.createElement('li', {}, p.nickname))
         ),
         FacileJS.createElement('p', { class: 'timer' }, status === 'countdown' ? timerText : 'Waiting for more players...'),

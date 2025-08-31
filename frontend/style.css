@@ -49,47 +49,102 @@ body {
 /* Nickname Screen */
 .nickname-screen h1 {
     margin-bottom: 20px;
+    color: #fff;
+    font-size: 3em;
+    text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+    animation: neon-flicker 1.5s infinite alternate;
 }
 
 .nickname-screen input {
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #555;
-    background-color: #222;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 255, 255, 0.5);
+    background-color: #111;
     color: #fff;
     width: 80%;
-    max-width: 300px;
-    margin-bottom: 10px;
+    max-width: 350px;
+    margin-bottom: 20px;
+    font-size: 18px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.nickname-screen input:focus {
+    outline: none;
+    border-color: rgba(0, 255, 255, 1);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
 }
 
 .nickname-screen button {
-    padding: 10px 20px;
-    border-radius: 4px;
+    padding: 15px 30px;
+    border-radius: 8px;
     border: none;
-    background-color: #007BFF;
+    background: linear-gradient(45deg, #007BFF, #00BFFF);
     color: #fff;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
 }
 
 .nickname-screen button:hover {
-    background-color: #0056b3;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 123, 255, 0.8);
 }
 
 /* Lobby Screen */
+.lobby-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
 .lobby-screen h1 {
     margin-bottom: 10px;
+    color: #fff;
+    text-shadow: 0 0 8px #ff00ff, 0 0 15px #ff00ff;
 }
 
 .lobby-screen p {
     font-size: 18px;
-    margin-bottom: 20px;
+    margin: 0;
+    color: #ccc;
 }
 
+.player-list {
+    list-style: none;
+    padding: 0;
+    width: 80%;
+    max-width: 400px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 0, 255, 0.4);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.player-list li {
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+}
+
+.player-list li:last-child {
+    margin-bottom: 0;
+}
+
+
 .lobby-screen .timer {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     color: #FFD700;
+    text-shadow: 0 0 5px #FFD700, 0 0 10px #FFD700;
 }
 
 /* Game Container */
@@ -234,6 +289,23 @@ body {
 }
 
 /* --- Animations --- */
+
+@keyframes neon-flicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        text-shadow:
+        0 0 4px #fff,
+        0 0 11px #fff,
+        0 0 19px #fff,
+        0 0 40px #0ff,
+        0 0 80px #0ff,
+        0 0 90px #0ff,
+        0 0 100px #0ff,
+        0 0 150px #0ff;
+    }
+    20%, 24%, 55% {
+        text-shadow: none;
+    }
+}
 
 @keyframes fire-explosion {
     0% {
