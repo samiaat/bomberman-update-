@@ -206,7 +206,7 @@ body {
 .player-1 { filter: brightness(0) invert(1) drop-shadow(0 0 8px #00ff00); }
 .player-2 { filter: brightness(0) invert(1) drop-shadow(0 0 8px #ff00ff); }
 .player-3 { filter: brightness(0) invert(1) drop-shadow(0 0 8px #ffff00); }
-.player-4 { filter: brightness(0) invert(1) drop-shadow(0 0 8px #ff4500); }
+.player-4 { filter: brightness(0) invert(1) drop-shadow(0 0 8px #00FFFF); } /* Cyan */
 
 /* Bomb */
 .bomb {
@@ -375,7 +375,7 @@ body {
 .player-1 .player-icon { border-color: #00ff00; }
 .player-2 .player-icon { border-color: #ff00ff; }
 .player-3 .player-icon { border-color: #ffff00; }
-.player-4 .player-icon { border-color: #ff4500; }
+.player-4 .player-icon { border-color: #00FFFF; } /* Cyan */
 
 .nickname {
     font-weight: bold;
